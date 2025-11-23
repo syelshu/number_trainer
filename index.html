@@ -28,7 +28,6 @@
             box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.8);
             width: 100%;
-            /* 进一步缩小尺寸适配 */
             max-width: 340px; 
             height: min(580px, 90vh); 
             position: relative;
@@ -124,7 +123,7 @@
             <!-- 核心互动区 -->
             <div class="flex-1 flex flex-col items-center justify-center gap-4">
                 
-                <!-- 播放器区域 (缩小尺寸) -->
+                <!-- 播放器区域 -->
                 <div class="relative group mt-1">
                     <button onclick="app.playAudio()" id="playBtn" class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-[0_10px_20px_-5px_rgba(37,99,235,0.4)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 z-10 relative border-4 border-white">
                         <i class="fas fa-volume-high text-2xl drop-shadow-md" id="speakerIcon"></i>
@@ -147,16 +146,17 @@
                         </div>
                     </div>
 
-                    <!-- 输入框组合 (改进点：增加左侧重播按钮) -->
+                    <!-- 输入框组合 (修复：输入框宽度变窄) -->
                     <div class="flex items-center justify-center w-full max-w-[240px] gap-2">
-                        <!-- 迷你重播按钮 (方便输入时点击) -->
+                        <!-- 迷你重播按钮 -->
                         <button onclick="app.playAudio()" class="w-10 h-10 rounded-full bg-gray-100 text-blue-500 flex items-center justify-center hover:bg-blue-50 transition-colors shadow-sm active:scale-95 shrink-0" tabindex="-1">
                             <i class="fas fa-redo-alt text-xs"></i>
                         </button>
 
+                        <!-- 输入框：宽度改为 w-32 -->
                         <input type="number" 
                             id="numInput" 
-                            class="flex-1 text-center text-4xl font-bold py-2 border-b-2 border-gray-200 bg-transparent focus:border-blue-500 focus:outline-none text-slate-700 transition-colors rounded-none placeholder-gray-200"
+                            class="w-32 text-center text-4xl font-bold py-2 border-b-2 border-gray-200 bg-transparent focus:border-blue-500 focus:outline-none text-slate-700 transition-colors rounded-none placeholder-gray-200"
                             placeholder="?"
                             pattern="[0-9]*" 
                             inputmode="numeric">
@@ -286,7 +286,7 @@
         config: {
             lang: 'fr',
             max: 999,
-            // 目标发音人配置 (修正 Amélie)
+            // 目标发音人配置
             targetVoices: {
                 fr: 'Amélie',
                 es: 'Paulina',
@@ -403,6 +403,24 @@
             this.state.locked = false;
             window.speechSynthesis.cancel();
             
+            // --- 关键修复：强制瞬间隐藏答案，防止泄露 ---
+            // 1. 暂时禁用过渡
+            this.els.answer.style.transition = 'none';
+            this.els.spell.style.transition = 'none';
+            
+            // 2. 隐藏并清空内容
+            this.hideAnswer();
+            this.els.answer.innerText = "";
+            this.els.spell.innerText = "";
+            
+            // 3. 强制浏览器重绘 (Flash repaint)
+            void this.els.answer.offsetHeight; 
+            
+            // 4. 恢复过渡 (清空 style 属性，让 CSS 生效)
+            this.els.answer.style.transition = '';
+            this.els.spell.style.transition = '';
+            // ------------------------------------
+
             let num;
             let attempts = 0;
             do {
@@ -420,12 +438,12 @@
             this.els.input.classList.remove('input-success', 'input-error');
             this.els.input.focus();
             
+            // 设置新答案（此时由于是隐藏状态，用户看不见）
             this.els.answer.innerText = num;
             // 获取拼写
             const spell = NumberSpeller[this.config.lang](num);
             this.els.spell.innerText = spell;
 
-            this.hideAnswer();
             this.els.feedback.innerText = "输入数字，自动检查";
             this.els.feedback.className = "h-4 text-[10px] font-medium text-gray-400 mt-1";
 
