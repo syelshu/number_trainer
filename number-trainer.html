@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>多语言数字听写练习器</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f5f5f7;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    .container {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      background: #ffffff;
+      padding: 20px 16px 24px;
+      border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+      max-width: 520px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+      margin: 0 0 8px;
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #666;
+      margin-bottom: 16px;
+      line-height: 1.4;
+      text-align: center;
+    }
+
+    .settings {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 10px;
+      justify-content: center;
+    }
+
+    .settings-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.82rem;
+    }
+
+    .settings-group label {
+      color: #555;
+    }
+
+    select {
+      border-radius: 999px;
+      padding: 7px 10px;
+      border: 1px solid #ccc;
+      font-size: 0.85rem;
+      background: #f8f8fa;
+      min-width: 150px;
+    }
+
+    .start-screen {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+
+    .start-btn {
+      margin-top: 8px;
+      border: none;
+      border-radius: 999px;
+      padding: 9px 20px;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      background: #007aff;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(0, 122, 255, 0.45);
+      transition: transform 0.05s ease, box-shadow 0.1s ease, background 0.1s ease;
+    }
+
+    .start-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(0, 122, 255, 0.3);
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button.tool-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: #007aff;
+      color: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: transform 0.05s ease, box-shadow 0.1s ease, background 0.1s ease;
+      box-shadow: 0 3px 8px rgba(0, 122, 255, 0.35);
+      white-space: nowrap;
+      min-width: 90px;
+    }
+
+    button.tool-btn.secondary {
+      background: #e5e5ea;
+      color: #111;
+      box-shadow: none;
+    }
+
+    button.tool-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(0, 122, 255, 0.3);
+    }
+
+    .input-area {
+      margin-bottom: 14px;
+    }
+
+    .input-area label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: #333;
+      text-align: left;
+    }
+
+    #answerInput {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 999px;
+      border: 1px solid #ccc;
+      font-size: 1.1rem;
+      outline: none;
+      box-sizing: border-box;
+      transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    #answerInput:focus {
+      border-color: #007aff;
+      box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.25);
+    }
+
+    #answerInput.correct {
+      border-color: #2ecc71;
+      background: #e9f9f0;
+      box-shadow: 0 0 0 2px rgba(46, 204, 113, 0.25);
+    }
+
+    #answerInput.incorrect {
+      border-color: #ff3b30;
+      background: #ffecec;
+      box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.25);
+    }
+
+    #feedback {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.85rem;
+      min-height: 18px;
+    }
+
+    #feedback.ok {
+      color: #2ecc71;
+    }
+
+    #feedback.err {
+      color: #ff3b30;
+    }
+
+    .info {
+      font-size: 0.86rem;
+      color: #444;
+      background: #f8f8fa;
+      border-radius: 14px;
+      padding: 10px 12px;
+      line-height: 1.4;
+    }
+
+    .info span.label {
+      color: #666;
+    }
+
+    .answer-text {
+      margin-top: 4px;
+      color: #666;
+      font-size: 0.8rem;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>多语言数字听写练习器</h1>
+    <div class="subtitle">
+      选择语言 + 数字范围，点击“开始练习”。<br>
+      系统用对应语言读出数字，你输入阿拉伯数字并按回车。
+    </div>
+
+    <div class="settings">
+      <div class="settings-group">
+        <label for="languageSelect">练习语言：</label>
+        <select id="languageSelect">
+          <option value="fr">法语 French</option>
+          <option value="es">西班牙语 Español</option>
+          <option value="pt">葡萄牙语 Português</option>
+        </select>
+      </div>
+      <div class="settings-group">
+        <label for="rangeSelect">数字范围：</label>
+        <select id="rangeSelect">
+          <option value="1-99">1 – 99</option>
+          <option value="1-999">1 – 999</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 开始练习界面 -->
+    <div id="startScreen" class="start-screen">
+      <div>⚠️ 手机浏览器为了保护隐私，需要你先点一次按钮才能播放语音。</div>
+      <button id="startBtn" class="start-btn">开始练习</button>
+    </div>
+
+    <!-- 练习区域 -->
+    <div id="practiceArea" class="hidden">
+      <div class="controls">
+        <button id="playBtn" class="tool-btn">🔊 再听一遍</button>
+        <button id="answerBtn" class="tool-btn secondary">🔍 显示答案</button>
+        <button id="nextBtn" class="tool-btn">⏭ 下一题</button>
+
+        <select id="voiceSelect">
+          <option>加载语音中…</option>
+        </select>
+      </div>
+
+      <div class="input-area">
+        <label for="answerInput">请输入你听到的数字（按 Enter / 回车 提交）：</label>
+        <input id="answerInput" type="tel" inputmode="numeric" autocomplete="off" />
+        <span id="feedback"></span>
+      </div>
+
+      <div class="info">
+        <div>
+          <span class="label">当前正确答案：</span>
+          <span id="answerReveal">（未显示，点“显示答案”查看）</span>
+        </div>
+        <div class="answer-text" id="answerText"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== 全局状态 ======
+    let currentLang = "fr";    // "fr", "es", "pt"
+    let rangeMin = 1;
+    let rangeMax = 99;
+    let remainingNumbers = [];
+    let currentNumber = null;
+    let started = false;
+
+    // 语音
+    let allVoices = [];
+    let currentVoices = []; // 当前语言对应的 voice 列表
+
+    const languageSelect = document.getElementById("languageSelect");
+    const rangeSelect = document.getElementById("rangeSelect");
+    const voiceSelect = document.getElementById("voiceSelect");
+    const answerInput = document.getElementById("answerInput");
+    const feedbackEl = document.getElementById("feedback");
+    const answerRevealEl = document.getElementById("answerReveal");
+    const answerTextEl = document.getElementById("answerText");
+    const playBtn = document.getElementById("playBtn");
+    const answerBtn = document.getElementById("answerBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const startBtn = document.getElementById("startBtn");
+    const startScreen = document.getElementById("startScreen");
+    const practiceArea = document.getElementById("practiceArea");
+
+    // 语言代码映射（用于 speechSynthesis）
+    const langConfig = {
+      fr: { code: "fr", ttsLang: "fr-FR" },
+      es: { code: "es", ttsLang: "es-ES" },
+      pt: { code: "pt", ttsLang: "pt-PT" } // 大多也能用 pt-BR voice
+    };
+
+    // ====== 数字池管理 ======
+    function initNumberPool() {
+      remainingNumbers = [];
+      for (let i = rangeMin; i <= rangeMax; i++) {
+        remainingNumbers.push(i);
+      }
+    }
+
+    function getNextRandomNumber() {
+      if (remainingNumbers.length === 0) {
+        initNumberPool();
+      }
+      const idx = Math.floor(Math.random() * remainingNumbers.length);
+      const value = remainingNumbers[idx];
+      remainingNumbers.splice(idx, 1);
+      return value;
+    }
+
+    // ====== 语音：加载并根据语言过滤 ======
+    function loadAllVoices() {
+      if (!("speechSynthesis" in window)) return;
+      allVoices = window.speechSynthesis.getVoices() || [];
+      updateVoicesForCurrentLanguage();
+    }
+
+    function updateVoicesForCurrentLanguage() {
+      if (!("speechSynthesis" in window)) return;
+      const targetPrefix = langConfig[currentLang].code.toLowerCase();
+
+      currentVoices = allVoices.filter(v =>
+        v.lang && v.lang.toLowerCase().startsWith(targetPrefix)
+      );
+
+      voiceSelect.innerHTML = "";
+
+      if (currentVoices.length === 0) {
+        const opt = document.createElement("option");
+        opt.textContent = "未找到该语言语音（建议用 Chrome / Safari）";
+        voiceSelect.appendChild(opt);
+        return;
+      }
+
+      currentVoices.forEach((v, idx) => {
+        const opt = document.createElement("option");
+        opt.value = v.name;
+        opt.textContent = v.name + " (" + v.lang + ")";
+        if (idx === 0) opt.selected = true;
+        voiceSelect.appendChild(opt);
+      });
+
+      // 尝试选一个更自然的 voice（按名字关键字）
+      const niceNamesByLang = {
+        fr: ["Amélie", "Amelie", "Thomas", "Audrey"],
+        es: ["Lucia", "Lucía", "Jorge", "Conchita"],
+        pt: ["Joana", "Camila", "Luciana", "Marcia"]
+      };
+      const niceList = niceNamesByLang[currentLang] || [];
+      const preferred = currentVoices.find(v =>
+        niceList.some(name =>
+          v.name.toLowerCase().includes(name.toLowerCase())
+        )
+      );
+      if (preferred) {
+        voiceSelect.value = preferred.name;
+      }
+    }
+
+    if (typeof window.speechSynthesis !== "undefined") {
+      window.speechSynthesis.onvoiceschanged = () => {
+        loadAllVoices();
+      };
+      loadAllVoices();
+    }
+
+    // ====== 语音播放 ======
+    function speakText(text) {
+      if (!("speechSynthesis" in window)) {
+        alert("当前浏览器不支持语音合成。建议使用 Chrome 或 Safari。");
+        return;
+      }
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = langConfig[currentLang].ttsLang;
+      utterance.rate = 0.9;
+      utterance.pitch = 1.0;
+
+      if (currentVoices.length > 0 && voiceSelect && voiceSelect.value) {
+        const selected = currentVoices.find(v => v.name === voiceSelect.value);
+        if (selected) {
+          utterance.voice = selected;
+        }
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function playCurrentNumber() {
+      if (currentNumber == null) return;
+      const text = numberToWords(currentNumber, currentLang);
+      speakText(text);
+    }
+
+    // ====== 数字转文字：按不同语言 ======
+    function numberToWords(n, lang) {
+      if (lang === "fr") return numberToFrench(n);
+      if (lang === "es") return numberToSpanish(n);
+      if (lang === "pt") return numberToPortuguese(n);
+      return String(n);
+    }
+
+    // ---- 法语 1–999 ----
+    function numberToFrench(n) {
+      if (n <= 0 || n > 999) return "";
+
+      const units = [
+        "", "un", "deux", "trois", "quatre",
+        "cinq", "six", "sept", "huit", "neuf"
+      ];
+
+      const teens = {
+        10: "dix",
+        11: "onze",
+        12: "douze",
+        13: "treize",
+        14: "quatorze",
+        15: "quinze",
+        16: "seize",
+        17: "dix-sept",
+        18: "dix-huit",
+        19: "dix-neuf"
+      };
+
+      const tensNames = {
+        20: "vingt",
+        30: "trente",
+        40: "quarante",
+        50: "cinquante",
+        60: "soixante"
+      };
+
+      function twoDigit(num) {
+        if (num === 0) return "";
+        if (num < 10) return units[num];
+        if (num >= 10 && num <= 19) return teens[num];
+
+        if (num >= 20 && num <= 69) {
+          const t = Math.floor(num / 10) * 10;
+          const u = num % 10;
+          const base = tensNames[t];
+          if (u === 0) return base;
+          if (u === 1 && (t === 20 || t === 30 || t === 40 || t === 50 || t === 60)) {
+            return base + " et un";
+          }
+          return base + "-" + units[u];
+        }
+
+        if (num >= 70 && num <= 79) {
+          const rest = num - 60; // 10–19
+          if (rest === 10) return "soixante-dix";
+          if (rest === 11) return "soixante et onze";
+          if (rest >= 12 && rest <= 19) {
+            return "soixante-" + teens[rest];
+          }
+        }
+
+        if (num === 80) return "quatre-vingts";
+
+        if (num >= 81 && num <= 89) {
+          const u = num - 80;
+          return "quatre-vingt-" + units[u];
+        }
+
+        if (num >= 90 && num <= 99) {
+          const rest = num - 80; // 10–19
+          if (rest >= 10 && rest <= 19) {
+            return "quatre-vingt-" + teens[rest];
+          }
+        }
+
+        return "";
+      }
+
+      function threeDigit(num) {
+        if (num < 100) return twoDigit(num);
+        const h = Math.floor(num / 100);
+        const rest = num % 100;
+        let result = "";
+
+        if (h === 1) {
+          result = "cent";
+        } else {
+          result = units[h] + " cent";
+        }
+
+        if (rest === 0 && h > 1) {
+          result += "s"; // deux cents
+        } else if (rest > 0) {
+          result += " " + twoDigit(rest);
+        }
+
+        return result;
+      }
+
+      return threeDigit(n);
+    }
+
+    // ---- 西班牙语 1–999 ----
+    function numberToSpanish(n) {
+      if (n <= 0 || n > 999) return "";
+
+      const units = [
+        "", "uno", "dos", "tres", "cuatro",
+        "cinco", "seis", "siete", "ocho", "nueve"
+      ];
+      const teens = {
+        10: "diez",
+        11: "once",
+        12: "doce",
+        13: "trece",
+        14: "catorce",
+        15: "quince",
+        16: "dieciséis",
+        17: "diecisiete",
+        18: "dieciocho",
+        19: "diecinueve"
+      };
+      const tensNames = {
+        20: "veinte",
+        30: "treinta",
+        40: "cuarenta",
+        50: "cincuenta",
+        60: "sesenta",
+        70: "setenta",
+        80: "ochenta",
+        90: "noventa"
+      };
+
+      function twoDigit(num) {
+        if (num < 10) return units[num];
+        if (num >= 10 && num <= 19) return teens[num];
+
+        if (num >= 20 && num <= 29) {
+          if (num === 20) return "veinte";
+          const u = num - 20;
+          return "veinti" + units[u];
+        }
+
+        const t = Math.floor(num / 10) * 10;
+        const u = num % 10;
+        const base = tensNames[t];
+        if (u === 0) return base;
+        return base + " y " + units[u];
+      }
+
+      if (n < 100) return twoDigit(n);
+
+      // hundreds
+      const hundredsNames = {
+        1: "ciento",
+        2: "doscientos",
+        3: "trescientos",
+        4: "cuatrocientos",
+        5: "quinientos",
+        6: "seiscientos",
+        7: "setecientos",
+        8: "ochocientos",
+        9: "novecientos"
+      };
+
+      const h = Math.floor(n / 100);
+      const rest = n % 100;
+
+      if (n === 100) return "cien";
+
+      let result = hundredsNames[h];
+      if (rest > 0) {
+        result += " " + twoDigit(rest);
+      }
+      return result;
+    }
+
+    // ---- 葡萄牙语 1–999 ----
+    function numberToPortuguese(n) {
+      if (n <= 0 || n > 999) return "";
+
+      const units = [
+        "", "um", "dois", "três", "quatro",
+        "cinco", "seis", "sete", "oito", "nove"
+      ];
+      const teens = {
+        10: "dez",
+        11: "onze",
+        12: "doze",
+        13: "treze",
+        14: "catorze",
+        15: "quinze",
+        16: "dezesseis",
+        17: "dezessete",
+        18: "dezoito",
+        19: "dezenove"
+      };
+      const tensNames = {
+        20: "vinte",
+        30: "trinta",
+        40: "quarenta",
+        50: "cinquenta",
+        60: "sessenta",
+        70: "setenta",
+        80: "oitenta",
+        90: "noventa"
+      };
+
+      function twoDigit(num) {
+        if (num < 10) return units[num];
+        if (num >= 10 && num <= 19) return teens[num];
+        const t = Math.floor(num / 10) * 10;
+        const u = num % 10;
+        const base = tensNames[t];
+        if (u === 0) return base;
+        return base + " e " + units[u];
+      }
+
+      if (n < 100) return twoDigit(n);
+
+      const hundredsNames = {
+        1: "cento",
+        2: "duzentos",
+        3: "trezentos",
+        4: "quatrocentos",
+        5: "quinhentos",
+        6: "seiscentos",
+        7: "setecentos",
+        8: "oitocentos",
+        9: "novecentos"
+      };
+
+      if (n === 100) return "cem";
+
+      const h = Math.floor(n / 100);
+      const rest = n % 100;
+
+      let result = hundredsNames[h];
+      if (rest > 0) {
+        result += " e " + twoDigit(rest);
+      }
+      return result;
+    }
+
+    // ====== 题目控制 ======
+    function resetInputStyles() {
+      answerInput.classList.remove("correct", "incorrect");
+      feedbackEl.classList.remove("ok", "err");
+      feedbackEl.textContent = "";
+    }
+
+    function loadNextQuestion() {
+      if (!started) return;
+      resetInputStyles();
+      answerRevealEl.textContent = "（未显示，点“显示答案”查看）";
+      answerTextEl.textContent = "";
+      answerInput.value = "";
+      answerInput.focus();
+
+      currentNumber = getNextRandomNumber();
+      playCurrentNumber();
+    }
+
+    function checkAnswer() {
+      if (!started || currentNumber == null) return;
+
+      const raw = answerInput.value.trim();
+      const userNum = parseInt(raw, 10);
+
+      if (isNaN(userNum)) {
+        answerInput.classList.add("incorrect");
+        feedbackEl.textContent = "请输入范围内的阿拉伯数字";
+        feedbackEl.classList.add("err");
+        return;
+      }
+
+      if (userNum === currentNumber) {
+        answerInput.classList.add("correct");
+        feedbackEl.textContent = "✅ 正确！即将进入下一题…";
+        feedbackEl.classList.add("ok");
+        setTimeout(() => {
+          loadNextQuestion();
+        }, 700);
+      } else {
+        answerInput.classList.add("incorrect");
+        feedbackEl.textContent = "❌ 不对，再听一遍试试～";
+        feedbackEl.classList.add("err");
+        setTimeout(() => {
+          answerInput.value = "";
+          playCurrentNumber();
+        }, 300);
+      }
+    }
+
+    // ====== 事件绑定 ======
+    answerInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === "Go" || e.key === "Done") {
+        checkAnswer();
+      }
+    });
+
+    answerInput.addEventListener("input", () => {
+      answerInput.classList.remove("correct", "incorrect");
+      feedbackEl.textContent = "";
+      feedbackEl.classList.remove("ok", "err");
+    });
+
+    playBtn.addEventListener("click", () => {
+      if (!started) return;
+      playCurrentNumber();
+      answerInput.focus();
+    });
+
+    answerBtn.addEventListener("click", () => {
+      if (!started || currentNumber == null) return;
+      const text = numberToWords(currentNumber, currentLang);
+      answerRevealEl.textContent = currentNumber;
+      answerTextEl.textContent = "当前语言读法：" + text;
+      answerInput.focus();
+    });
+
+    nextBtn.addEventListener("click", () => {
+      loadNextQuestion();
+    });
+
+    startBtn.addEventListener("click", () => {
+      started = true;
+      startScreen.classList.add("hidden");
+      practiceArea.classList.remove("hidden");
+      initNumberPool();
+      loadNextQuestion();
+    });
+
+    languageSelect.addEventListener("change", () => {
+      currentLang = languageSelect.value;
+      updateVoicesForCurrentLanguage();
+      if (started) {
+        initNumberPool();
+        loadNextQuestion();
+      }
+    });
+
+    rangeSelect.addEventListener("change", () => {
+      const [minStr, maxStr] = rangeSelect.value.split("-");
+      rangeMin = parseInt(minStr, 10);
+      rangeMax = parseInt(maxStr, 10);
+      if (started) {
+        initNumberPool();
+        loadNextQuestion();
+      }
+    });
+
+    // 初始设置
+    rangeMin = 1;
+    rangeMax = 99;
+  </script>
+</body>
+</html>
