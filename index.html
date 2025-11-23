@@ -24,12 +24,13 @@
         .app-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 28px;
-            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.8);
             width: 100%;
-            max-width: 380px; 
-            height: min(620px, 92vh); 
+            /* 进一步缩小尺寸适配 */
+            max-width: 340px; 
+            height: min(580px, 90vh); 
             position: relative;
             overflow: hidden;
             display: flex;
@@ -64,28 +65,28 @@
     <div class="app-container" id="app">
         
         <!-- 1. 设置面板 -->
-        <div id="settingsPanel" class="flex flex-col h-full p-6 slide-in">
-            <header class="text-center mb-6 shrink-0">
-                <h1 class="text-2xl font-black text-slate-800 tracking-tight">听力特训</h1>
-                <p class="text-[10px] text-gray-400 font-bold uppercase mt-1">Targeted Voice Practice</p>
+        <div id="settingsPanel" class="flex flex-col h-full p-5 slide-in">
+            <header class="text-center mb-5 shrink-0">
+                <h1 class="text-xl font-black text-slate-800 tracking-tight">听力特训</h1>
+                <p class="text-[10px] text-gray-400 font-bold uppercase mt-0.5">Targeted Voice Practice</p>
             </header>
 
-            <div class="flex-1 space-y-6">
+            <div class="flex-1 space-y-5">
                 <!-- 语言选择 -->
                 <div>
                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 block pl-1">学习语言</label>
                     <div class="grid grid-cols-3 gap-2">
-                        <button onclick="app.setLang('fr')" id="lang-fr" class="btn-selected py-4 rounded-xl font-bold text-sm transition-all shadow-sm flex flex-col items-center gap-1">
-                            <span class="text-xl">🇫🇷</span>
-                            <span class="text-[10px] opacity-80">Amelie</span>
+                        <button onclick="app.setLang('fr')" id="lang-fr" class="btn-selected py-3 rounded-xl font-bold text-xs transition-all shadow-sm flex flex-col items-center gap-0.5">
+                            <span class="text-lg">🇫🇷</span>
+                            <span class="text-[9px] opacity-90">Amélie</span>
                         </button>
-                        <button onclick="app.setLang('es')" id="lang-es" class="btn-outline py-4 rounded-xl font-bold text-sm transition-all shadow-sm flex flex-col items-center gap-1">
-                            <span class="text-xl">🇪🇸</span>
-                            <span class="text-[10px] opacity-80">Paulina</span>
+                        <button onclick="app.setLang('es')" id="lang-es" class="btn-outline py-3 rounded-xl font-bold text-xs transition-all shadow-sm flex flex-col items-center gap-0.5">
+                            <span class="text-lg">🇪🇸</span>
+                            <span class="text-[9px] opacity-90">Paulina</span>
                         </button>
-                        <button onclick="app.setLang('pt')" id="lang-pt" class="btn-outline py-4 rounded-xl font-bold text-sm transition-all shadow-sm flex flex-col items-center gap-1">
-                            <span class="text-xl">🇵🇹</span>
-                            <span class="text-[10px] opacity-80">Luciana</span>
+                        <button onclick="app.setLang('pt')" id="lang-pt" class="btn-outline py-3 rounded-xl font-bold text-xs transition-all shadow-sm flex flex-col items-center gap-0.5">
+                            <span class="text-lg">🇵🇹</span>
+                            <span class="text-[9px] opacity-90">Luciana</span>
                         </button>
                     </div>
                 </div>
@@ -93,77 +94,87 @@
                 <!-- 难度/范围 -->
                 <div>
                     <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 block pl-1">数字范围</label>
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="app.setRange(99)" id="range-99" class="btn-outline py-3 rounded-xl font-bold text-lg transition-all shadow-sm">1 - 99</button>
-                        <button onclick="app.setRange(999)" id="range-999" class="btn-selected py-3 rounded-xl font-bold text-lg transition-all shadow-sm">1 - 999</button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="app.setRange(99)" id="range-99" class="btn-outline py-3 rounded-xl font-bold text-base transition-all shadow-sm">1 - 99</button>
+                        <button onclick="app.setRange(999)" id="range-999" class="btn-selected py-3 rounded-xl font-bold text-base transition-all shadow-sm">1 - 999</button>
                     </div>
                 </div>
             </div>
 
-            <button onclick="app.startGame()" class="mt-4 w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-base shadow-lg shadow-slate-200 transition-all active:scale-95 flex items-center justify-center gap-2 shrink-0">
+            <button onclick="app.startGame()" class="mt-4 w-full py-3.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-sm shadow-lg shadow-slate-200 transition-all active:scale-95 flex items-center justify-center gap-2 shrink-0">
                 开始练习 <i class="fas fa-arrow-right text-xs"></i>
             </button>
         </div>
 
         <!-- 2. 游戏面板 -->
-        <div id="gamePanel" class="hidden flex-col h-full p-5 relative">
+        <div id="gamePanel" class="hidden flex-col h-full p-4 relative">
             
             <!-- 顶部导航 -->
-            <div class="flex justify-between items-center h-10 shrink-0 mb-2">
-                <button onclick="app.backToSettings()" class="w-9 h-9 rounded-full bg-white border border-gray-100 text-gray-400 hover:text-gray-600 shadow-sm flex items-center justify-center transition-all">
-                    <i class="fas fa-chevron-left text-sm"></i>
+            <div class="flex justify-between items-center h-8 shrink-0 mb-1">
+                <button onclick="app.backToSettings()" class="w-8 h-8 rounded-full bg-white border border-gray-100 text-gray-400 hover:text-gray-600 shadow-sm flex items-center justify-center transition-all">
+                    <i class="fas fa-chevron-left text-xs"></i>
                 </button>
                 <div class="flex gap-2 text-[10px] font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full border border-gray-200">
                     <span id="flagDisplay">🇫🇷</span>
                     <span>Max: <span id="rangeDisplay">999</span></span>
                 </div>
-                <div class="w-9"></div>
+                <div class="w-8"></div>
             </div>
 
             <!-- 核心互动区 -->
-            <div class="flex-1 flex flex-col items-center justify-center gap-8">
+            <div class="flex-1 flex flex-col items-center justify-center gap-4">
                 
-                <!-- 播放器区域 -->
-                <div class="relative group mt-2">
-                    <button onclick="app.playAudio()" id="playBtn" class="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-[0_15px_30px_-8px_rgba(37,99,235,0.4)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 z-10 relative border-4 border-white">
-                        <i class="fas fa-volume-high text-4xl drop-shadow-md" id="speakerIcon"></i>
+                <!-- 播放器区域 (缩小尺寸) -->
+                <div class="relative group mt-1">
+                    <button onclick="app.playAudio()" id="playBtn" class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-[0_10px_20px_-5px_rgba(37,99,235,0.4)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 z-10 relative border-4 border-white">
+                        <i class="fas fa-volume-high text-2xl drop-shadow-md" id="speakerIcon"></i>
                     </button>
                     <div class="absolute inset-0 bg-blue-500 rounded-full opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
-                    <p class="text-center mt-3 text-xs font-bold text-slate-400" id="currentVoiceName">Voice: Auto</p>
+                    <p class="text-center mt-2 text-[10px] font-bold text-slate-400" id="currentVoiceName">Voice: Auto</p>
                 </div>
 
                 <!-- 答案与输入区 -->
-                <div class="w-full flex flex-col items-center space-y-2">
+                <div class="w-full flex flex-col items-center space-y-1">
                     <!-- 答案容器 -->
-                    <div class="h-16 flex flex-col items-center justify-end overflow-hidden mb-2">
+                    <div class="h-12 flex flex-col items-center justify-end overflow-hidden mb-1">
                         <!-- 数字答案 -->
-                        <div id="answerText" class="text-4xl font-black text-slate-800 opacity-0 transition-all duration-300 transform translate-y-full leading-none">
+                        <div id="answerText" class="text-3xl font-black text-slate-800 opacity-0 transition-all duration-300 transform translate-y-full leading-none">
                             ---
                         </div>
                         <!-- 拼写答案 -->
-                        <div id="answerSpell" class="text-sm font-bold text-blue-500 opacity-0 transition-all duration-300 transform translate-y-full mt-1">
+                        <div id="answerSpell" class="text-[10px] font-bold text-blue-500 opacity-0 transition-all duration-300 transform translate-y-full mt-0.5">
                             ---
                         </div>
                     </div>
 
-                    <!-- 输入框 -->
-                    <input type="number" 
-                           id="numInput" 
-                           class="w-full max-w-[200px] text-center text-5xl font-bold py-2 border-b-2 border-gray-200 bg-transparent focus:border-blue-500 focus:outline-none text-slate-700 transition-colors rounded-none placeholder-gray-200"
-                           placeholder="?"
-                           pattern="[0-9]*" 
-                           inputmode="numeric">
+                    <!-- 输入框组合 (改进点：增加左侧重播按钮) -->
+                    <div class="flex items-center justify-center w-full max-w-[240px] gap-2">
+                        <!-- 迷你重播按钮 (方便输入时点击) -->
+                        <button onclick="app.playAudio()" class="w-10 h-10 rounded-full bg-gray-100 text-blue-500 flex items-center justify-center hover:bg-blue-50 transition-colors shadow-sm active:scale-95 shrink-0" tabindex="-1">
+                            <i class="fas fa-redo-alt text-xs"></i>
+                        </button>
+
+                        <input type="number" 
+                            id="numInput" 
+                            class="flex-1 text-center text-4xl font-bold py-2 border-b-2 border-gray-200 bg-transparent focus:border-blue-500 focus:outline-none text-slate-700 transition-colors rounded-none placeholder-gray-200"
+                            placeholder="?"
+                            pattern="[0-9]*" 
+                            inputmode="numeric">
+                        
+                        <!-- 占位保持对称 -->
+                        <div class="w-10 h-10 shrink-0"></div>
+                    </div>
                     
-                    <p id="feedbackMsg" class="h-4 text-xs font-medium text-gray-400 mt-2">输入数字，自动检查</p>
+                    <p id="feedbackMsg" class="h-4 text-[10px] font-medium text-gray-400 mt-1">输入数字，自动检查</p>
                 </div>
             </div>
 
             <!-- 底部按钮 -->
-            <div class="grid grid-cols-2 gap-3 mt-auto shrink-0 pt-4">
-                <button onclick="app.toggleAnswer()" class="py-3 rounded-xl bg-white border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 hover:text-gray-700 transition-all shadow-sm text-sm">
+            <div class="grid grid-cols-2 gap-3 mt-auto shrink-0 pt-3">
+                <button onclick="app.toggleAnswer()" class="py-3 rounded-xl bg-white border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 hover:text-gray-700 transition-all shadow-sm text-xs">
                     <i class="fas fa-eye mr-1"></i> <span id="toggleText">看答案</span>
                 </button>
-                <button onclick="app.nextQuestion()" class="py-3 rounded-xl bg-slate-800 text-white font-bold shadow-lg hover:bg-slate-900 active:scale-95 transition-all text-sm">
+                <button onclick="app.nextQuestion()" class="py-3 rounded-xl bg-slate-800 text-white font-bold shadow-lg hover:bg-slate-900 active:scale-95 transition-all text-xs">
                     下一题
                 </button>
             </div>
@@ -275,9 +286,9 @@
         config: {
             lang: 'fr',
             max: 999,
-            // 目标发音人配置
+            // 目标发音人配置 (修正 Amélie)
             targetVoices: {
-                fr: 'Amelie',
+                fr: 'Amélie',
                 es: 'Paulina',
                 pt: 'Luciana'
             }
@@ -416,14 +427,14 @@
 
             this.hideAnswer();
             this.els.feedback.innerText = "输入数字，自动检查";
-            this.els.feedback.className = "h-4 text-xs font-medium text-gray-400 mt-2";
+            this.els.feedback.className = "h-4 text-[10px] font-medium text-gray-400 mt-1";
 
             if(autoPlay) this.playAudio();
         },
 
         playAudio() {
             window.speechSynthesis.cancel();
-            this.els.speaker.className = "fas fa-volume-high text-4xl"; // Reset icon
+            this.els.speaker.className = "fas fa-volume-high text-2xl"; // Reset icon
 
             const text = this.state.currentNum.toString();
             const utterance = new SpeechSynthesisUtterance(text);
@@ -436,10 +447,10 @@
             utterance.rate = 0.85; 
 
             utterance.onstart = () => {
-                this.els.speaker.className = "fas fa-volume-up text-4xl text-yellow-300"; // Highlight
+                this.els.speaker.className = "fas fa-volume-up text-2xl text-yellow-300"; // Highlight
             };
             utterance.onend = () => {
-                this.els.speaker.className = "fas fa-volume-high text-4xl";
+                this.els.speaker.className = "fas fa-volume-high text-2xl";
             };
 
             window.speechSynthesis.speak(utterance);
@@ -465,21 +476,21 @@
             this.els.spell.classList.remove('opacity-0', 'translate-y-full');
             
             this.els.feedback.innerText = "Correct! 非常棒";
-            this.els.feedback.className = "h-4 text-xs font-bold text-green-600 mt-2";
+            this.els.feedback.className = "h-4 text-[10px] font-bold text-green-600 mt-1";
             
             confetti({ particleCount: 60, spread: 50, origin: { y: 0.6 } });
-            setTimeout(() => this.nextQuestion(true), 2000); // 稍微长一点时间看拼写
+            setTimeout(() => this.nextQuestion(true), 2000); 
         },
         fail() {
             this.els.input.classList.add('input-error', 'shake');
             this.els.feedback.innerText = "不对哦...";
-            this.els.feedback.className = "h-4 text-xs font-bold text-red-500 mt-2";
+            this.els.feedback.className = "h-4 text-[10px] font-bold text-red-500 mt-1";
             setTimeout(() => {
                 this.els.input.classList.remove('input-error', 'shake');
                 this.els.input.value = '';
                 this.els.input.focus();
                 this.els.feedback.innerText = "再听一遍";
-                this.els.feedback.className = "h-4 text-xs font-medium text-gray-400 mt-2";
+                this.els.feedback.className = "h-4 text-[10px] font-medium text-gray-400 mt-1";
                 this.playAudio();
             }, 800);
         },
