@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>听力训练 (自定义语音版)</title>
+    <title>听力特训 (特定语音版)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -12,24 +12,24 @@
         
         body {
             font-family: 'Nunito', sans-serif;
-            background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 99%, #e3eeff 100%);
+            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             touch-action: manipulation;
-            padding: 20px;
+            padding: 10px;
         }
 
         .app-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-radius: 32px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border-radius: 28px;
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.8);
             width: 100%;
-            max-width: 420px;
-            height: 700px; /* 固定高度以保持布局稳定 */
+            max-width: 380px; 
+            height: min(620px, 92vh); 
             position: relative;
             overflow: hidden;
             display: flex;
@@ -54,17 +54,6 @@
         input[type=number] { -moz-appearance: textfield; }
         input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* 自定义下拉框样式 */
-        .voice-select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-            background-position: right 0.5rem center;
-            background-repeat: no-repeat;
-            background-size: 1.5em 1.5em;
-            padding-right: 2.5rem;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
         .btn-selected { background-color: #3b82f6; color: white; border-color: #3b82f6; }
         .btn-outline { background-color: white; color: #64748b; border-color: #e2e8f0; }
         .btn-outline:hover { background-color: #f8fafc; border-color: #cbd5e1; }
@@ -75,90 +64,84 @@
     <div class="app-container" id="app">
         
         <!-- 1. 设置面板 -->
-        <div id="settingsPanel" class="flex flex-col h-full p-8 slide-in">
-            <header class="text-center mb-6">
+        <div id="settingsPanel" class="flex flex-col h-full p-6 slide-in">
+            <header class="text-center mb-6 shrink-0">
                 <h1 class="text-2xl font-black text-slate-800 tracking-tight">听力特训</h1>
-                <p class="text-xs text-gray-400 font-bold uppercase mt-1">定制你的练习环境</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase mt-1">Targeted Voice Practice</p>
             </header>
 
-            <div class="flex-1 space-y-6 overflow-y-auto pb-4 custom-scrollbar">
-                
+            <div class="flex-1 space-y-6">
                 <!-- 语言选择 -->
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block pl-1">学习语言</label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <button onclick="app.setLang('fr')" id="lang-fr" class="btn-selected py-3 rounded-xl font-bold text-sm transition-all shadow-sm">🇫🇷 法语</button>
-                        <button onclick="app.setLang('es')" id="lang-es" class="btn-outline py-3 rounded-xl font-bold text-sm transition-all shadow-sm">🇪🇸 西语</button>
-                        <button onclick="app.setLang('pt')" id="lang-pt" class="btn-outline py-3 rounded-xl font-bold text-sm transition-all shadow-sm">🇵🇹 葡语</button>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 block pl-1">学习语言</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="app.setLang('fr')" id="lang-fr" class="btn-selected py-4 rounded-xl font-bold text-sm transition-all shadow-sm flex flex-col items-center gap-1">
+                            <span class="text-xl">🇫🇷</span>
+                            <span class="text-[10px] opacity-80">Amelie</span>
+                        </button>
+                        <button onclick="app.setLang('es')" id="lang-es" class="btn-outline py-4 rounded-xl font-bold text-sm transition-all shadow-sm flex flex-col items-center gap-1">
+                            <span class="text-xl">🇪🇸</span>
+                            <span class="text-[10px] opacity-80">Paulina</span>
+                        </button>
+                        <button onclick="app.setLang('pt')" id="lang-pt" class="btn-outline py-4 rounded-xl font-bold text-sm transition-all shadow-sm flex flex-col items-center gap-1">
+                            <span class="text-xl">🇵🇹</span>
+                            <span class="text-[10px] opacity-80">Luciana</span>
+                        </button>
                     </div>
                 </div>
 
                 <!-- 难度/范围 -->
                 <div>
-                    <label class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2 block pl-1">数字范围</label>
-                    <div class="grid grid-cols-3 gap-3">
-                        <button onclick="app.setRange(99)" id="range-99" class="btn-outline py-3 rounded-xl font-bold text-sm transition-all shadow-sm">1-99</button>
-                        <button onclick="app.setRange(999)" id="range-999" class="btn-selected py-3 rounded-xl font-bold text-sm transition-all shadow-sm">1-999</button>
-                        <button onclick="app.setRange(9999)" id="range-9999" class="btn-outline py-3 rounded-xl font-bold text-sm transition-all shadow-sm">1-9999</button>
+                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2 block pl-1">数字范围</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="app.setRange(99)" id="range-99" class="btn-outline py-3 rounded-xl font-bold text-lg transition-all shadow-sm">1 - 99</button>
+                        <button onclick="app.setRange(999)" id="range-999" class="btn-selected py-3 rounded-xl font-bold text-lg transition-all shadow-sm">1 - 999</button>
                     </div>
                 </div>
-
-                <!-- 关键更新：语音选择器 -->
-                <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
-                    <label class="flex items-center gap-2 text-sm font-bold text-blue-800 mb-2">
-                        <i class="fas fa-microphone-alt"></i> 选择发音人
-                    </label>
-                    <select id="voiceSelect" onchange="app.selectVoice()" class="voice-select w-full p-3 rounded-lg border border-blue-200 bg-white text-gray-700 text-sm font-medium focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 shadow-sm transition-colors">
-                        <option value="online">⚡ Google 在线高清 (推荐)</option>
-                        <!-- 本地语音将通过 JS 插入这里 -->
-                    </select>
-                    <p class="text-[10px] text-blue-400 mt-2 leading-tight">
-                        * "Google在线" 需要联网。如果卡顿，请在列表中选择带有 "Siri", "Microsoft" 或 "Google" 字样的本地语音。
-                    </p>
-                </div>
-
             </div>
 
-            <button onclick="app.startGame()" class="mt-4 w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-2xl font-bold text-lg shadow-xl shadow-slate-200 transition-all active:scale-95 flex items-center justify-center gap-2">
-                开始练习 <i class="fas fa-arrow-right text-sm"></i>
+            <button onclick="app.startGame()" class="mt-4 w-full py-4 bg-slate-800 hover:bg-slate-900 text-white rounded-xl font-bold text-base shadow-lg shadow-slate-200 transition-all active:scale-95 flex items-center justify-center gap-2 shrink-0">
+                开始练习 <i class="fas fa-arrow-right text-xs"></i>
             </button>
         </div>
 
         <!-- 2. 游戏面板 -->
-        <div id="gamePanel" class="hidden flex-col h-full p-6 relative">
+        <div id="gamePanel" class="hidden flex-col h-full p-5 relative">
             
             <!-- 顶部导航 -->
-            <div class="flex justify-between items-center h-12 shrink-0">
-                <button onclick="app.backToSettings()" class="w-10 h-10 rounded-full bg-white border border-gray-100 text-gray-400 hover:text-gray-600 shadow-sm flex items-center justify-center transition-all">
-                    <i class="fas fa-chevron-left"></i>
+            <div class="flex justify-between items-center h-10 shrink-0 mb-2">
+                <button onclick="app.backToSettings()" class="w-9 h-9 rounded-full bg-white border border-gray-100 text-gray-400 hover:text-gray-600 shadow-sm flex items-center justify-center transition-all">
+                    <i class="fas fa-chevron-left text-sm"></i>
                 </button>
-                <div class="flex gap-2 text-xs font-bold text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full border border-gray-200">
+                <div class="flex gap-2 text-[10px] font-bold text-gray-500 bg-gray-100 px-3 py-1 rounded-full border border-gray-200">
                     <span id="flagDisplay">🇫🇷</span>
                     <span>Max: <span id="rangeDisplay">999</span></span>
                 </div>
-                <div class="w-10"></div> <!-- 占位 -->
+                <div class="w-9"></div>
             </div>
 
-            <!-- 核心互动区 (使用 flex-1 和 justify-center 来控制垂直布局) -->
-            <div class="flex-1 flex flex-col items-center justify-center gap-10">
+            <!-- 核心互动区 -->
+            <div class="flex-1 flex flex-col items-center justify-center gap-8">
                 
-                <!-- 播放器区域 (位置下移) -->
-                <div class="relative group mt-4">
-                    <!-- 播放按钮 -->
-                    <button onclick="app.playAudio()" id="playBtn" class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-[0_20px_40px_-10px_rgba(37,99,235,0.4)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 z-10 relative border-4 border-white">
-                        <i class="fas fa-volume-high text-5xl drop-shadow-md" id="speakerIcon"></i>
+                <!-- 播放器区域 -->
+                <div class="relative group mt-2">
+                    <button onclick="app.playAudio()" id="playBtn" class="w-28 h-28 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-[0_15px_30px_-8px_rgba(37,99,235,0.4)] flex items-center justify-center transition-all hover:scale-105 active:scale-95 z-10 relative border-4 border-white">
+                        <i class="fas fa-volume-high text-4xl drop-shadow-md" id="speakerIcon"></i>
                     </button>
-                    <!-- 装饰光环 -->
                     <div class="absolute inset-0 bg-blue-500 rounded-full opacity-20 blur-xl group-hover:opacity-40 transition-opacity"></div>
-                    
-                    <p class="text-center mt-5 text-sm font-bold text-blue-400" id="voiceLabel">正在使用在线语音</p>
+                    <p class="text-center mt-3 text-xs font-bold text-slate-400" id="currentVoiceName">Voice: Auto</p>
                 </div>
 
                 <!-- 答案与输入区 -->
-                <div class="w-full flex flex-col items-center space-y-4">
-                    <!-- 答案 (绝对定位在输入框上方) -->
-                    <div class="h-10 flex items-end justify-center overflow-hidden">
-                        <div id="answerText" class="text-4xl font-black text-slate-800 opacity-0 transition-all duration-300 transform translate-y-full">
+                <div class="w-full flex flex-col items-center space-y-2">
+                    <!-- 答案容器 -->
+                    <div class="h-16 flex flex-col items-center justify-end overflow-hidden mb-2">
+                        <!-- 数字答案 -->
+                        <div id="answerText" class="text-4xl font-black text-slate-800 opacity-0 transition-all duration-300 transform translate-y-full leading-none">
+                            ---
+                        </div>
+                        <!-- 拼写答案 -->
+                        <div id="answerSpell" class="text-sm font-bold text-blue-500 opacity-0 transition-all duration-300 transform translate-y-full mt-1">
                             ---
                         </div>
                     </div>
@@ -166,21 +149,21 @@
                     <!-- 输入框 -->
                     <input type="number" 
                            id="numInput" 
-                           class="w-full max-w-[220px] text-center text-5xl font-bold py-3 border-b-2 border-gray-200 bg-transparent focus:border-blue-500 focus:outline-none text-slate-700 transition-colors rounded-none placeholder-gray-200"
+                           class="w-full max-w-[200px] text-center text-5xl font-bold py-2 border-b-2 border-gray-200 bg-transparent focus:border-blue-500 focus:outline-none text-slate-700 transition-colors rounded-none placeholder-gray-200"
                            placeholder="?"
                            pattern="[0-9]*" 
                            inputmode="numeric">
                     
-                    <p id="feedbackMsg" class="h-5 text-sm font-medium text-gray-400">输入数字，自动检查</p>
+                    <p id="feedbackMsg" class="h-4 text-xs font-medium text-gray-400 mt-2">输入数字，自动检查</p>
                 </div>
             </div>
 
-            <!-- 底部按钮 (固定在底部) -->
-            <div class="grid grid-cols-2 gap-4 mt-auto shrink-0 pt-6">
-                <button onclick="app.toggleAnswer()" class="py-3.5 rounded-xl bg-white border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 hover:text-gray-700 transition-all shadow-sm">
+            <!-- 底部按钮 -->
+            <div class="grid grid-cols-2 gap-3 mt-auto shrink-0 pt-4">
+                <button onclick="app.toggleAnswer()" class="py-3 rounded-xl bg-white border border-gray-200 text-gray-500 font-bold hover:bg-gray-50 hover:text-gray-700 transition-all shadow-sm text-sm">
                     <i class="fas fa-eye mr-1"></i> <span id="toggleText">看答案</span>
                 </button>
-                <button onclick="app.nextQuestion()" class="py-3.5 rounded-xl bg-slate-800 text-white font-bold shadow-lg hover:bg-slate-900 active:scale-95 transition-all">
+                <button onclick="app.nextQuestion()" class="py-3 rounded-xl bg-slate-800 text-white font-bold shadow-lg hover:bg-slate-900 active:scale-95 transition-all text-sm">
                     下一题
                 </button>
             </div>
@@ -189,125 +172,193 @@
     </div>
 
 <script>
+    // --- 简单的数字转文字工具 (1-999) ---
+    const NumberSpeller = {
+        fr: (n) => {
+            const units = ['','un','deux','trois','quatre','cinq','six','sept','huit','neuf','dix','onze','douze','treize','quatorze','quinze','seize','dix-sept','dix-huit','dix-neuf'];
+            const tens = ['','','vingt','trente','quarante','cinquante','soixante','soixante','quatre-vingt','quatre-vingt'];
+            
+            if (n < 20) return units[n];
+            if (n < 70) {
+                let t = Math.floor(n/10);
+                let u = n%10;
+                let str = tens[t];
+                if(u===1) str += '-et-un';
+                else if(u>0) str += '-' + units[u];
+                return str;
+            }
+            if (n < 80) { // 70-79
+                let str = tens[6]; // soixante
+                let u = n - 60;
+                if(u===1 || u===11) str += '-et-';
+                else str += '-';
+                str += units[u];
+                return str;
+            }
+            if (n < 100) { // 80-99
+                let t = Math.floor(n/10); // 8 or 9
+                let str = tens[t]; // quatre-vingt
+                if(n===80) str += 's';
+                let u = n - (t===8 ? 80 : 80); // remainder
+                if (t===9) u += 10; // logic adjustment for 90s
+                else u = n%10;
+
+                if (t===9) { // 90-99 -> 80 + 10...19
+                     u = n - 80;
+                }
+                
+                if(n > 80) str += '-' + units[u];
+                return str;
+            }
+            if (n < 1000) {
+                if (n === 100) return 'cent';
+                let h = Math.floor(n/100);
+                let r = n%100;
+                let str = (h===1 ? '' : units[h] + ' ') + 'cent';
+                if(h>1 && r===0) str += 's';
+                if(r>0) str += ' ' + NumberSpeller.fr(r);
+                return str;
+            }
+            return n;
+        },
+        es: (n) => {
+            const units = ['','uno','dos','tres','cuatro','cinco','seis','siete','ocho','nueve','diez','once','doce','trece','catorce','quince','dieciséis','diecisiete','dieciocho','diecinueve'];
+            const tens = ['','','veinte','treinta','cuarenta','cincuenta','sesenta','setenta','ochenta','noventa'];
+            
+            if (n < 20) return units[n];
+            if (n < 30) return n === 20 ? 'veinte' : 'veinti' + units[n%10];
+            if (n < 100) {
+                let t = Math.floor(n/10);
+                let u = n%10;
+                return tens[t] + (u>0 ? ' y ' + units[u] : '');
+            }
+            if (n < 1000) {
+                if(n===100) return 'cien';
+                let h = Math.floor(n/100);
+                let r = n%100;
+                let hStr = '';
+                if(h===1) hStr = 'ciento';
+                else if(h===5) hStr = 'quinientos';
+                else if(h===7) hStr = 'setecientos';
+                else if(h===9) hStr = 'novecientos';
+                else hStr = units[h] + 'cientos';
+                
+                return hStr + (r>0 ? ' ' + NumberSpeller.es(r) : '');
+            }
+            return n;
+        },
+        pt: (n) => {
+            const units = ['','um','dois','três','quatro','cinco','seis','sete','oito','nove','dez','onze','doze','treze','quatorze','quinze','dezesseis','dezessete','dezoito','dezenove'];
+            const tens = ['','','vinte','trinta','quarenta','cinquenta','sessenta','setenta','oitenta','noventa'];
+            
+            if (n < 20) return units[n];
+            if (n < 100) {
+                let t = Math.floor(n/10);
+                let u = n%10;
+                return tens[t] + (u>0 ? ' e ' + units[u] : '');
+            }
+            if (n < 1000) {
+                if(n===100) return 'cem';
+                let h = Math.floor(n/100);
+                let r = n%100;
+                let hStr = '';
+                if(h===1) hStr = 'cento';
+                else hStr = [null,null,'duzentos','trezentos','quatrocentos','quinhentos','seiscentos','setecentos','oitocentos','novecentos'][h];
+                
+                return hStr + (r>0 ? ' e ' + NumberSpeller.pt(r) : '');
+            }
+            return n;
+        }
+    };
+
     const app = {
         config: {
             lang: 'fr',
             max: 999,
-            voiceURI: 'online' // 'online' 或 specific voice URI
+            // 目标发音人配置
+            targetVoices: {
+                fr: 'Amelie',
+                es: 'Paulina',
+                pt: 'Luciana'
+            }
         },
         state: {
             currentNum: 1,
             history: [],
             locked: false,
-            audioObj: null,
-            localVoices: []
+            currentVoice: null
         },
         els: {},
 
         init() {
-            // 绑定元素
             this.els = {
                 settings: document.getElementById('settingsPanel'),
                 game: document.getElementById('gamePanel'),
                 input: document.getElementById('numInput'),
                 playBtn: document.getElementById('playBtn'),
                 speaker: document.getElementById('speakerIcon'),
-                voiceLabel: document.getElementById('voiceLabel'),
+                voiceLabel: document.getElementById('currentVoiceName'),
                 feedback: document.getElementById('feedbackMsg'),
                 answer: document.getElementById('answerText'),
+                spell: document.getElementById('answerSpell'),
                 toggleText: document.getElementById('toggleText'),
                 flag: document.getElementById('flagDisplay'),
-                range: document.getElementById('rangeDisplay'),
-                voiceSelect: document.getElementById('voiceSelect')
+                range: document.getElementById('rangeDisplay')
             };
 
-            // 绑定事件
             this.els.input.addEventListener('input', (e) => this.checkInput(e.target.value));
             this.els.input.addEventListener('keydown', (e) => { if(e.key === 'Enter') this.forceCheck(); });
 
-            // 初始化语音列表
-            this.populateVoiceList();
-            if (window.speechSynthesis.onvoiceschanged !== undefined) {
-                window.speechSynthesis.onvoiceschanged = () => this.populateVoiceList();
+            // 预加载
+            window.speechSynthesis.getVoices();
+        },
+
+        // --- 核心：查找特定语音 ---
+        findVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            const targetName = this.config.targetVoices[this.config.lang];
+            
+            // 1. 尝试完全匹配名称 (包含即可)
+            let voice = voices.find(v => v.name.includes(targetName));
+            
+            // 2. 如果没找到，降级为匹配语言代码
+            if (!voice) {
+                const langCodePrefix = this.config.lang === 'fr' ? 'fr' : (this.config.lang === 'es' ? 'es' : 'pt');
+                voice = voices.find(v => v.lang.startsWith(langCodePrefix));
+            }
+
+            this.state.currentVoice = voice;
+            
+            // 更新 UI 显示当前用的谁
+            if (voice) {
+                let dispName = voice.name.replace('Microsoft', '').replace('Google', '').replace('Desktop', '').trim();
+                // 截断太长的
+                if (dispName.length > 15) dispName = dispName.substring(0, 15) + '...';
+                this.els.voiceLabel.innerText = `Voice: ${dispName}`;
+            } else {
+                this.els.voiceLabel.innerText = "Voice: System Default";
             }
         },
 
-        // --- 核心更新：填充语音下拉框 ---
-        populateVoiceList() {
-            // 获取所有语音
-            const allVoices = window.speechSynthesis.getVoices();
-            this.state.localVoices = allVoices;
-
-            // 清空列表，保留第一项(Online)
-            const select = this.els.voiceSelect;
-            select.innerHTML = '<option value="online">⚡ Google 在线高清 (推荐)</option>';
-
-            // 筛选当前语言的语音
-            // 法语(fr), 西语(es), 葡语(pt)
-            const targetLang = this.config.lang; 
-            const filteredVoices = allVoices.filter(v => v.lang.toLowerCase().startsWith(targetLang));
-
-            if(filteredVoices.length === 0) {
-                const opt = document.createElement('option');
-                opt.disabled = true;
-                opt.text = "--- 未检测到本地语音包 ---";
-                select.appendChild(opt);
-            }
-
-            // 排序：把 Google / Microsoft / Siri 这种好听的放前面
-            filteredVoices.sort((a, b) => {
-                const isPremiumA = a.name.includes('Google') || a.name.includes('Microsoft') || a.name.includes('Siri');
-                const isPremiumB = b.name.includes('Google') || b.name.includes('Microsoft') || b.name.includes('Siri');
-                if (isPremiumA && !isPremiumB) return -1;
-                if (!isPremiumA && isPremiumB) return 1;
-                return 0;
-            });
-
-            filteredVoices.forEach(voice => {
-                const option = document.createElement('option');
-                option.value = voice.voiceURI; // 使用 URI 作为唯一标识
-                // 优化显示名称，去掉乱七八糟的后缀
-                let displayName = voice.name.replace('Microsoft', '').replace('Google', '').replace('Desktop', '').trim();
-                option.text = `🗣️ ${displayName} (本地)`;
-                
-                // 标记一下是哪种类型的声音
-                if(voice.name.includes('Google')) option.text = `🟢 Google ${displayName}`;
-                if(voice.name.includes('Microsoft')) option.text = `🔵 Win ${displayName}`;
-                if(voice.name.includes('Siri')) option.text = `🍎 Siri ${displayName}`;
-
-                select.appendChild(option);
-            });
-
-            // 恢复之前的选择（如果还在列表里）
-            select.value = this.config.voiceURI;
-            // 如果之前选的 voice 没了（比如切换了语言），重置为 online
-            if(select.selectedIndex === -1) {
-                select.value = 'online';
-                this.config.voiceURI = 'online';
-            }
-        },
-
-        // --- 设置逻辑 ---
         setLang(l) {
             this.config.lang = l;
             this.updateBtnState('lang', l);
-            // 切换语言后，重新填充语音列表
-            this.populateVoiceList(); 
         },
         setRange(r) {
             this.config.max = r;
             this.updateBtnState('range', r);
         },
-        selectVoice() {
-            this.config.voiceURI = this.els.voiceSelect.value;
-        },
         updateBtnState(type, val) {
-            const btns = document.querySelectorAll(`#${type}-fr, #${type}-es, #${type}-pt, #${type}-99, #${type}-999, #${type}-9999`);
+            const btns = document.querySelectorAll(`[id^="${type}-"]`);
             btns.forEach(b => {
                 const isSelected = b.id === `${type}-${val}`;
-                b.className = isSelected 
-                    ? "btn-selected py-3 rounded-xl font-bold text-sm transition-all shadow-sm"
-                    : "btn-outline py-3 rounded-xl font-bold text-sm transition-all shadow-sm";
+                if (isSelected) {
+                    b.classList.remove('btn-outline');
+                    b.classList.add('btn-selected');
+                } else {
+                    b.classList.remove('btn-selected');
+                    b.classList.add('btn-outline');
+                }
             });
         },
 
@@ -320,36 +371,26 @@
             this.els.flag.innerText = flags[this.config.lang];
             this.els.range.innerText = this.config.max;
 
-            // 更新播放器下方的提示文字
-            this.updateVoiceLabel();
+            // 寻找语音
+            this.findVoice();
+            // 再次绑定以防异步加载
+            if (!this.state.currentVoice && window.speechSynthesis.onvoiceschanged !== undefined) {
+                window.speechSynthesis.onvoiceschanged = () => this.findVoice();
+            }
 
             this.nextQuestion(true);
-        },
-
-        updateVoiceLabel() {
-            if(this.config.voiceURI === 'online') {
-                this.els.voiceLabel.innerText = "正在使用在线高清语音";
-                this.els.voiceLabel.className = "text-center mt-5 text-sm font-bold text-blue-500";
-            } else {
-                // 查找 voice name
-                const voice = this.state.localVoices.find(v => v.voiceURI === this.config.voiceURI);
-                const name = voice ? voice.name.replace('Microsoft', '').replace('Google', '').trim() : '本地语音';
-                this.els.voiceLabel.innerText = `正在使用: ${name}`;
-                this.els.voiceLabel.className = "text-center mt-5 text-sm font-bold text-slate-500";
-            }
         },
 
         backToSettings() {
             this.els.game.classList.add('hidden');
             this.els.game.classList.remove('flex');
             this.els.settings.classList.remove('hidden');
-            this.stopAudio();
+            window.speechSynthesis.cancel();
         },
 
-        // --- 游戏逻辑 ---
         nextQuestion(autoPlay = true) {
             this.state.locked = false;
-            this.stopAudio();
+            window.speechSynthesis.cancel();
             
             let num;
             let attempts = 0;
@@ -369,74 +410,41 @@
             this.els.input.focus();
             
             this.els.answer.innerText = num;
+            // 获取拼写
+            const spell = NumberSpeller[this.config.lang](num);
+            this.els.spell.innerText = spell;
+
             this.hideAnswer();
             this.els.feedback.innerText = "输入数字，自动检查";
-            this.els.feedback.className = "h-5 text-sm font-medium text-gray-400";
+            this.els.feedback.className = "h-4 text-xs font-medium text-gray-400 mt-2";
 
             if(autoPlay) this.playAudio();
         },
 
-        // --- 核心：双模式播放逻辑 ---
         playAudio() {
-            this.stopAudio();
-            this.els.speaker.className = "fas fa-spinner fa-spin text-4xl"; // Loading 状态
+            window.speechSynthesis.cancel();
+            this.els.speaker.className = "fas fa-volume-high text-4xl"; // Reset icon
 
             const text = this.state.currentNum.toString();
-
-            // 模式 A: 在线 Google TTS
-            if (this.config.voiceURI === 'online') {
-                const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=${this.config.lang}&client=gtx&q=${text}`;
-                const audio = new Audio(url);
-                this.state.audioObj = audio;
-
-                audio.oncanplaythrough = () => {
-                    this.els.speaker.className = "fas fa-volume-high text-5xl";
-                    audio.play().catch(e => console.log("Play blocked", e));
-                };
-                
-                audio.onerror = () => {
-                    alert("网络语音连接失败，请在设置中切换为本地语音。");
-                    this.els.speaker.className = "fas fa-exclamation-triangle text-red-400 text-3xl";
-                };
-
-                // 超时保护
-                setTimeout(() => {
-                    if (audio.readyState === 0) {
-                        this.els.speaker.className = "fas fa-wifi text-red-400 text-3xl"; // 提示网络慢
-                    }
-                }, 2000);
+            const utterance = new SpeechSynthesisUtterance(text);
             
-            } 
-            // 模式 B: 本地 SpeechSynthesis
-            else {
-                const utterance = new SpeechSynthesisUtterance(text);
-                const voice = this.state.localVoices.find(v => v.voiceURI === this.config.voiceURI);
-                
-                if (voice) utterance.voice = voice;
-                utterance.rate = 0.9; // 稍微慢点
-
-                utterance.onstart = () => {
-                    this.els.speaker.className = "fas fa-volume-high text-5xl";
-                };
-                
-                utterance.onend = () => {
-                    // 播放结束
-                };
-
-                window.speechSynthesis.speak(utterance);
+            if (this.state.currentVoice) {
+                utterance.voice = this.state.currentVoice;
             }
+            
+            // 针对不同语言微调语速
+            utterance.rate = 0.85; 
+
+            utterance.onstart = () => {
+                this.els.speaker.className = "fas fa-volume-up text-4xl text-yellow-300"; // Highlight
+            };
+            utterance.onend = () => {
+                this.els.speaker.className = "fas fa-volume-high text-4xl";
+            };
+
+            window.speechSynthesis.speak(utterance);
         },
 
-        stopAudio() {
-            if(this.state.audioObj) {
-                this.state.audioObj.pause();
-                this.state.audioObj = null;
-            }
-            window.speechSynthesis.cancel();
-            this.els.speaker.className = "fas fa-volume-high text-5xl";
-        },
-
-        // --- 验证与UI ---
         checkInput(val) {
             if(this.state.locked) return;
             if(val === this.state.currentNum.toString()) this.success();
@@ -451,28 +459,34 @@
             this.state.locked = true;
             this.els.input.blur();
             this.els.input.classList.add('input-success');
-            this.els.feedback.innerText = "非常棒！Très bien!";
-            this.els.feedback.className = "h-5 text-sm font-bold text-green-600";
             
-            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
-            setTimeout(() => this.nextQuestion(true), 1200);
+            // 显示答案和拼写
+            this.els.answer.classList.remove('opacity-0', 'translate-y-full');
+            this.els.spell.classList.remove('opacity-0', 'translate-y-full');
+            
+            this.els.feedback.innerText = "Correct! 非常棒";
+            this.els.feedback.className = "h-4 text-xs font-bold text-green-600 mt-2";
+            
+            confetti({ particleCount: 60, spread: 50, origin: { y: 0.6 } });
+            setTimeout(() => this.nextQuestion(true), 2000); // 稍微长一点时间看拼写
         },
         fail() {
             this.els.input.classList.add('input-error', 'shake');
             this.els.feedback.innerText = "不对哦...";
-            this.els.feedback.className = "h-5 text-sm font-bold text-red-500";
+            this.els.feedback.className = "h-4 text-xs font-bold text-red-500 mt-2";
             setTimeout(() => {
                 this.els.input.classList.remove('input-error', 'shake');
                 this.els.input.value = '';
                 this.els.input.focus();
                 this.els.feedback.innerText = "再听一遍";
-                this.els.feedback.className = "h-5 text-sm font-medium text-gray-400";
+                this.els.feedback.className = "h-4 text-xs font-medium text-gray-400 mt-2";
                 this.playAudio();
             }, 800);
         },
         toggleAnswer() {
             if(this.els.answer.classList.contains('opacity-0')) {
                 this.els.answer.classList.remove('opacity-0', 'translate-y-full');
+                this.els.spell.classList.remove('opacity-0', 'translate-y-full');
                 this.els.toggleText.innerText = "隐藏";
             } else {
                 this.hideAnswer();
@@ -480,6 +494,7 @@
         },
         hideAnswer() {
             this.els.answer.classList.add('opacity-0', 'translate-y-full');
+            this.els.spell.classList.add('opacity-0', 'translate-y-full');
             this.els.toggleText.innerText = "看答案";
         }
     };
